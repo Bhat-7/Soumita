@@ -1,0 +1,84 @@
+{
+  "personal": {
+    "name": "Soumita Bhattacharya Sen",
+    "title": "Senior BI Developer & Data Analyst",
+    "contact": {
+      "email": "sbhattacharyaa3@gmail.com",
+      "phone": "+91 9073551506",
+      "linkedin": "https://www.linkedin.com/in/soumita-bhattacharya-sen/",
+      "github": "https://github.com/soumitabsen"
+    },
+    "summary": "Detail-oriented and highly analytical Data Analyst and BI Developer with over 8 years of experience. Proven expertise in transforming complex data sets into intuitive, interactive dashboards that drive strategic business decisions. Specializes in Power BI, Tableau, and advanced SQL data modeling. Passionate about uncovering the 'why' behind the numbers and delivering quiet luxury in data visualization.",
+    "profile_picture": "/assets/images/profile.png"
+  },
+  "experience": [
+    {
+      "id": 1,
+      "company": "Tata Consultancy Services",
+      "logo": "https://cdn.worldvectorlogo.com/logos/tata-consultancy-services.svg",
+      "role": "BI Developer",
+      "duration": "Nov 2016 - Present",
+      "description": "Leading enterprise-grade business intelligence solutions.",
+      "highlights": [
+        "Architected scalable Power BI data models handling 50M+ rows of transactional data.",
+        "Collaborated with executive stakeholders to define key performance indicators (KPIs) and operational metrics."
+      ],
+      "technologies": ["Power BI", "SAP BO", "Tableau", "SQL", "Python"]
+    },
+    {
+      "id": 2,
+      "company": "Wipro Technologies",
+      "logo": "https://upload.wikimedia.org/wikipedia/commons/a/a0/Wipro_Primary_Logo_Color_RGB.svg",
+      "role": "Comms Trainer",
+      "duration": "Aug 2014 - Nov 2016",
+      "description": "Supported core business operations, facilitating employee development and analyzing training metrics.",
+      "highlights": [
+        "Delivered impactful communications training to optimize team efficiency and stakeholder interactions.",
+        "Maintained performance dashboards to track trainee progress and program effectiveness."
+      ],
+      "technologies": [
+        "Performance Dashboards",
+        "Excel",
+        "Data Analysis",
+        "Stakeholder Management"
+      ]
+    }
+  ],
+  "skills": {
+    "BI_Tools": ["Power BI (DAX, Power Query)", "Tableau", "Looker"],
+    "Languages_and_Databases": [
+      "SQL",
+      "PostgreSQL",
+      "Python (Pandas, NumPy)",
+      "T-SQL"
+    ],
+    "Soft_Skills": [
+      "Stakeholder Management",
+      "Requirement Gathering",
+      "Agile/Scrum Methodologies",
+      "Data Storytelling"
+    ]
+  },
+  "recommendations": [
+    {
+      "id": 1,
+      "name": "Aman Verma",
+      "role": "Delivery Manager at TCS",
+      "text": "Soumita is an exceptional BI developer. Her ability to translate vague stakeholder requirements into crystal-clear, performant dashboards is unmatched. She brings both technical excellence and a keen eye for design to every project."
+    },
+    {
+      "id": 2,
+      "name": "Priya Sharma",
+      "role": "Lead Data Scientist at Wipro",
+      "text": "Working with Soumita was an absolute pleasure. She has a meticulous approach to data validation and always ensures that the insights presented are 100% accurate and actionable. A true asset to any data team."
+    }
+  ],
+  "personal_interests": {
+    "travel_destinations": [
+      "Swiss Alps, Switzerland",
+      "Kyoto, Japan",
+      "Santorini, Greece"
+    ],
+    "favorite_flowers": ["Orchids", "White Peonies", "Cherry Blossoms"]
+  }
+}

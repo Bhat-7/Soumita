@@ -1,0 +1,6 @@
+.footer-wrapper {
+  border-top: 1px solid #ccc;
+  font-family: var(--fontFamily);
+  font-size: 1rem;
+  font-weight: 600;
+}

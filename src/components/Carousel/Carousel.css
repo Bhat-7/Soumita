@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+.carousel-container {
+  background-color: var(--border-color);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+}
+
+.carousel-wrapper {
+  margin: 0 auto;
+  overflow: hidden;
+  /* This creates the "window" */
+  width: 100%;
+}
+
+.carousel-content {
+  display: flex;
+  transition: transform 0.5s ease-out;
+  /* This makes it smooth */
+}
+
+.left-arrow,
+.right-arrow {
+  cursor: pointer;
+  width: 50px;
+  height: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  border: 1px solid #eee;
+  /* border: 1px solid var(--border-color); */
+  border-radius: 50%;
+}
+
+.carousel-item {
+  width: 100%;
+  /* Each item takes full width of the window */
+  flex-shrink: 0;
+}

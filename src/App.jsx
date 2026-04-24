@@ -1,12 +1,29 @@
-import Home from "./pages/Home/Home";
-import "./App.css";
+import React from "react";
+import { createBrowserRouter, RouterProvider } from "react-router";
+import { Provider } from "react-redux";
+import { store } from "./assets/store";
+import Layout from "./components/Layout";
+import Home from "./pages/Home";
 
-function App() {
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        index: true,
+        element: <Home />,
+      },
+    ],
+  },
+]);
+
+const App = () => {
   return (
-    <div className="App">
-      <Home />
-    </div>
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   );
-}
+};
 
 export default App;

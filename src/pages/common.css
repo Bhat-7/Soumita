@@ -1,0 +1,57 @@
+/* Common Section Titles (Replaces .contact-title and .category-title) */
+.section-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 1.4rem;
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .section-title {
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+    }
+}
+
+/* Common Primary Buttons (Replaces .contact-button and .home-button) */
+.primary-btn {
+    padding: 0.5rem;
+    border-radius: 10px;
+    border: 0.1rem solid var(--primary-color);
+    background-color: #fff;
+    margin: 5px;
+    color: var(--primary-color);
+    font-weight: 500;
+    font-size: var(--sm-base-font-size);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.primary-btn:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+    box-shadow: 0 4px 8px var(--primary-color);
+}
+
+/* Common Navigation Links (Replaces shared link styles in Navbar, Header, Sidebar) */
+.common-link,
+.nav-link,
+.sidebar-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.common-link:hover,
+.nav-link:hover,
+.sidebar-link:hover,
+.active {
+    color: var(--primary-color-hover);
+}

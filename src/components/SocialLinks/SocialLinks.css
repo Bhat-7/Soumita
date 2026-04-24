@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+.social-links {
+  border: var(--border-values);
+  border-radius: var(--border-radius);
+  padding: 5px 10px;
+  margin: 5px;
+  transition: all 0.3s ease;
+  background-color: #fff;
+  color: #000;
+}
+
+.social-links:hover {
+  outline: 1px solid var(--primary-color);
+  box-shadow: 0 4px 8px var(--primary-color);
+}

@@ -1,25 +1,165 @@
+@import "tailwindcss";
+
 .home-wrapper {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(150deg, #b2ddb0, #2232);
-  padding: 2rem;
-  border-radius: 20px;
+  .home-content {
+    .home-heading {
+      overflow: hidden;
+      border-right: 0.15em solid orange;
+      white-space: nowrap;
+      margin: 0 auto;
+      letter-spacing: 0.15em;
+      animation:
+        typing 3.5s steps(40, end),
+        blink-caret 0.75s step-end infinite;
+      color: var(--primary-color);
+      font-size: var(--sm-base-font-size);
+    }
+
+    .home-name {
+      color: var(--primary-color);
+      font-family: var(--heroFont);
+      font-size: var(--sm-title-name-font-size);
+      font-weight: bold;
+    }
+
+    .home-button {
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--border-radius);
+      border: var(--border-values);
+      background-color: var(--primary-color);
+      margin: 5px 0;
+      color: #fff;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      font-size: var(--sm-base-font-size);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .home-button:hover {
+      background-color: #fff;
+      color: var(--primary-color);
+      box-shadow: 0 10px 15px -3px var(--primary-color), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      transform: translateY(-2px);
+    }
+  }
 }
-.home-content {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 20px;
-  max-width: 600px;
+
+@media (min-width: 769px) {
+  .home-wrapper {
+    .home-content {
+      .home-heading {
+        font-size: var(--lg-heading-font-size);
+      }
+
+      .home-name {
+        font-size: var(--lg-title-name-font-size);
+      }
+    }
+  }
 }
-.home-content h1 {
-  font-size: 2.5rem;
-  color: rgb(55, 55, 146);
+
+/* Tablet screens (768px and below) */
+@media (max-width: 768px) {
+  .home-wrapper {
+    .home-content {
+      width: 100%;
+
+      .home-heading {
+        font-size: var(--md-heading-font-size);
+      }
+
+      .home-name {
+        /* font-size: var(--md-title-name-font-size); */
+      }
+    }
+  }
 }
-.home-content p {
-  font-size: 1.2rem;
-  color: rgb(23, 23, 58);
+
+/* Mobile screens (480px and below) */
+@media (max-width: 480px) {
+  .home-wrapper {
+    /* gap: 10px; */
+
+    .home-content {
+
+      /* font-size: var(--sm-paragraph-font-size); */
+      .home-name {
+        /* font-size: var(--sm-title-name-font-size); */
+      }
+    }
+  }
+}
+
+/* The typing effect */
+@keyframes typing {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+
+  from,
+  to {
+    border-color: transparent;
+  }
+
+  50% {
+    border-color: orange;
+  }
+}
+
+/* For waving hand */
+.wave {
+  animation-name: wave-animation;
+  /* Refers to the name of your @keyframes element below */
+  animation-duration: 2.5s;
+  /* Change to speed up or slow down */
+  animation-iteration-count: infinite;
+  /* Never stop waving :) */
+  transform-origin: 70% 70%;
+  /* Pivot around the bottom-left palm */
+  display: inline-block;
+}
+
+@keyframes wave-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  10% {
+    transform: rotate(14deg);
+  }
+
+  /* The following five values can be played with to make the waving more or less extreme */
+  20% {
+    transform: rotate(-8deg);
+  }
+
+  30% {
+    transform: rotate(14deg);
+  }
+
+  40% {
+    transform: rotate(-4deg);
+  }
+
+  50% {
+    transform: rotate(10deg);
+  }
+
+  60% {
+    transform: rotate(0deg);
+  }
+
+  /* Reset for the last half to pause */
+  100% {
+    transform: rotate(0deg);
+  }
 }

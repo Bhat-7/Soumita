@@ -1,5 +1,5 @@
 import React from "react";
-import portfolioData from "../assets/portfolioData.json";
+import { useSelector } from "react-redux";
 import Hero from "../components/Hero";
 import ExperienceTimeline from "../components/ExperienceTimeline";
 import SkillsGrid from "../components/SkillsGrid";
@@ -8,6 +8,8 @@ import ContactForm from "../components/ContactForm";
 import PersonalInterests from "../components/PersonalInterests";
 
 const Home = () => {
+  const portfolioData = useSelector((state) => state.ui.portfolioData);
+
   return (
     <div className="flex flex-col min-h-screen space-y-16 relative">
       {/* Landing Space Backdrops (Full bleed, masked to fade out) */}

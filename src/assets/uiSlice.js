@@ -1,9 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
+import portfolioData from './portfolioData.json';
 
 const initialState = {
     // Defaulting to false so the light theme is the first display
     isDarkMode: false,
     isAudioPlaying: false,
+    portfolioData: portfolioData,
 };
 
 export const uiSlice = createSlice({

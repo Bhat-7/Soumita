@@ -5,11 +5,12 @@ import { Moon, Sun, Volume2, VolumeX, Menu, X, Download } from "lucide-react";
 import { toggleTheme, toggleAudio } from "../assets/uiSlice";
 import { useAudio } from "../assets/useAudio";
 import Footer from "./Footer";
-import portfolioData from "../assets/portfolioData.json";
 
 const Layout = () => {
   const dispatch = useDispatch();
-  const { isDarkMode, isAudioPlaying } = useSelector((state) => state.ui);
+  const { isDarkMode, isAudioPlaying, portfolioData } = useSelector(
+    (state) => state.ui,
+  );
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Using a highly reliable test audio URL to prevent CORS/403 blocks

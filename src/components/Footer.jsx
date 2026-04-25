@@ -1,5 +1,5 @@
 import React from "react";
-import portfolioData from "../assets/portfolioData.json";
+import { useSelector } from "react-redux";
 
 // Custom SVGs to replace Lucide brand icons
 const GithubIcon = ({ size = 20, strokeWidth = 1.5 }) => (
@@ -39,7 +39,8 @@ const LinkedinIcon = ({ size = 20, strokeWidth = 1.5 }) => (
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  const { contact, name } = portfolioData.personal;
+  const portfolioData = useSelector((state) => state.ui.portfolioData);
+  const { contact, name, built_by, tagline } = portfolioData.personal;
 
   return (
     <footer className="w-full py-12 mt-12 border-t border-slate-200/50 dark:border-slate-800/50 relative z-10">
@@ -75,11 +76,10 @@ const Footer = () => {
 
         <div className="flex flex-col items-center space-y-2 mt-4 text-center">
           <p className="text-sm font-light text-slate-400 dark:text-slate-500 tracking-wider">
-            &copy; {currentYear} {name}. All rights reserved. Designed and Built
-            with ❤️ by Debayan Sen.
+            &copy; {currentYear} {name}. All rights reserved. {built_by}
           </p>
           <p className="text-xs text-slate-300 dark:text-slate-600 mt-2">
-            Quiet Luxury in Data Visualization
+            {tagline}
           </p>
         </div>
       </div>

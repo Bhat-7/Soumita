@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
-import { Moon, Sun, Volume2, VolumeX, Menu, X } from "lucide-react";
+import { Moon, Sun, Volume2, VolumeX, Menu, X, Download } from "lucide-react";
 import { toggleTheme, toggleAudio } from "../assets/uiSlice";
 import { useAudio } from "../assets/useAudio";
 import Footer from "./Footer";
+import portfolioData from "../assets/portfolioData.json";
 
 const Layout = () => {
   const dispatch = useDispatch();
@@ -51,6 +52,17 @@ const Layout = () => {
               </a>
             ))}
           </div>
+
+          {/* Download Resume Button (Desktop) */}
+          <a
+            href={portfolioData.personal.downloadPDF}
+            download="Soumita_Bhattacharya_Sen_CV.pdf"
+            className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-md bg-white/60 dark:bg-slate-800/60 border border-slate-200/50 dark:border-slate-700/50 text-sm font-medium tracking-wide text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all duration-300 shadow-[0_2px_10px_rgba(0,0,0,0.02)]"
+          >
+            <Download size={16} strokeWidth={1.5} />
+            <span>Resume</span>
+          </a>
+
           <button
             onClick={() => dispatch(toggleTheme())}
             className="p-2 rounded-full hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors opacity-80 hover:opacity-100"
@@ -90,6 +102,17 @@ const Layout = () => {
                 {link.name}
               </a>
             ))}
+
+            {/* Download Resume Button (Mobile) */}
+            <a
+              href={portfolioData.personal.downloadPDF}
+              download="Soumita_Bhattacharya_Sen_CV.pdf"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="flex items-center justify-center gap-2 mt-2 px-6 py-3.5 rounded-xl bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 font-medium tracking-wide transition-all shadow-md"
+            >
+              <Download size={18} strokeWidth={2} />
+              <span>Download Resume</span>
+            </a>
           </div>
         )}
       </header>

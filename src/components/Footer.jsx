@@ -75,7 +75,8 @@ const Footer = () => {
 
         <div className="flex flex-col items-center space-y-2 mt-4 text-center">
           <p className="text-sm font-light text-slate-400 dark:text-slate-500 tracking-wider">
-            &copy; {currentYear} {name}. All rights reserved.
+            &copy; {currentYear} {name}. All rights reserved. Designed and Built
+            with ❤️ by Debayan Sen.
           </p>
           <p className="text-xs text-slate-300 dark:text-slate-600 mt-2">
             Quiet Luxury in Data Visualization

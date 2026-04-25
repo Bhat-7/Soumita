@@ -1,5 +1,5 @@
 import React from "react";
-import { BarChart2, Database, Users } from "lucide-react";
+import { BarChart2, Database, Users, BrainCircuit } from "lucide-react";
 
 const SkillsGrid = ({ skills }) => {
   // Map the JSON keys to specific Lucide icons for visual variety
@@ -7,6 +7,7 @@ const SkillsGrid = ({ skills }) => {
     BI_Tools: <BarChart2 size={24} strokeWidth={1.5} />,
     Languages_and_Databases: <Database size={24} strokeWidth={1.5} />,
     Soft_Skills: <Users size={24} strokeWidth={1.5} />,
+    AI_Skills: <BrainCircuit size={24} strokeWidth={1.5} />,
   };
 
   return (

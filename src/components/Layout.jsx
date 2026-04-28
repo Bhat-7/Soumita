@@ -29,7 +29,7 @@ const Layout = () => {
       <Header />
 
       {/* Main Content Area */}
-      <main className="pt-24 pb-12 px-6 max-w-5xl mx-auto flex-grow flex flex-col">
+      <main className="pt-24 pb-12 flex-grow flex flex-col">
         <Outlet />
       </main>
 

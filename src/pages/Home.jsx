@@ -32,7 +32,7 @@ const Home = () => {
       <div className="relative z-10 flex flex-col space-y-16">
         <Hero personal={portfolioData.personal} />
         <ExperienceTimeline experiences={portfolioData.experience} />
-        <SkillsGrid skills={portfolioData.skills} />
+        <SkillsGrid />
         <ReviewCarousel recommendations={portfolioData.recommendations} />
         <ContactForm />
         <PersonalInterests interests={portfolioData.personal_interests} />

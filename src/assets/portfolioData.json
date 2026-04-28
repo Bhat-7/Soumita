@@ -92,5 +92,16 @@
       "Lilies",
       "Carnations"
     ]
+  },
+  "background_assets": {
+    "images": [
+      "/assets/images/cherry-blossoms-bg.gif",
+      "/assets/images/roses-bg.jpg",
+      "/assets/images/carnitions-bg.jpg"
+    ],
+    "audios": [
+      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+    ]
   }
 }

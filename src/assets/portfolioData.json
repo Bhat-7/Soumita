@@ -79,10 +79,18 @@
   ],
   "personal_interests": {
     "travel_destinations": [
-      "Swiss Alps, Switzerland",
-      "Kyoto, Japan",
-      "Santorini, Greece"
+      "Singapore",
+      "Karbi, Thailand",
+      "Phuket, Thailand",
+      "Mumbai, India",
+      "Bengalore, India"
     ],
-    "favorite_flowers": ["Orchids", "White Peonies", "Cherry Blossoms"]
+    "favorite_flowers": [
+      "Orchids",
+      "White Peonies",
+      "Cherry Blossoms",
+      "Lilies",
+      "Carnations"
+    ]
   }
 }

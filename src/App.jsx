@@ -1,7 +1,7 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { Provider } from "react-redux";
-import { store } from "./assets/store";
+import { store } from "./context/store";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 

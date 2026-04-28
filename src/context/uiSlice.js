@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import portfolioData from './portfolioData.json';
+import portfolioData from '../assets/portfolioData.json';
 
 const initialState = {
     // Defaulting to false so the light theme is the first display

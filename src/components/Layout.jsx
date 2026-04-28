@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { Outlet } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import { Volume2, VolumeX } from "lucide-react";
-import { toggleAudio } from "../assets/uiSlice";
-import { useAudio } from "../assets/useAudio";
+import { toggleAudio } from "../context/uiSlice";
+import { useAudio } from "../utility/useAudio";
 import Footer from "./Footer";
 import Header from "./Header";
 

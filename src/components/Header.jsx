@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Moon, Sun, Menu, X, Download } from "lucide-react";
-import { toggleTheme } from "../assets/uiSlice";
+import { toggleTheme } from "../context/uiSlice";
 
 const Header = () => {
   const dispatch = useDispatch();

@@ -44,12 +44,12 @@ const Footer = () => {
 
   return (
     <footer className="w-full py-12 mt-12 border-t border-slate-200/50 dark:border-slate-800/50 relative z-10">
-      <div className="max-w-5xl mx-auto px-6 flex flex-col items-center justify-center space-y-6">
+      <div className="max-w-5xl mx-auto px-6 flex-row flex items-center justify-between">
         <a
           href={`mailto:${contact.email}`}
           className="text-lg font-light tracking-wide text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors duration-300 border-b border-transparent hover:border-slate-400 dark:hover:border-slate-500 pb-1"
         >
-          {contact.email}
+          {contact.email} | {contact.phone}
         </a>
 
         {/* Social Links */}
@@ -73,15 +73,14 @@ const Footer = () => {
             <GithubIcon size={20} strokeWidth={1.5} />
           </a>
         </div>
-
-        <div className="flex flex-col items-center space-y-2 mt-4 text-center">
-          <p className="text-sm font-light text-slate-400 dark:text-slate-500 tracking-wider">
-            &copy; {currentYear} {name}. All rights reserved. {built_by}
-          </p>
-          <p className="text-xs text-slate-300 dark:text-slate-600 mt-2">
-            {tagline}
-          </p>
-        </div>
+      </div>
+      <div className="flex flex-col items-center space-y-2 mt-4 text-center">
+        <p className="text-sm font-light text-slate-400 dark:text-slate-500 tracking-wider">
+          &copy; {currentYear} {name}. All rights reserved. {built_by}
+        </p>
+        <p className="text-xs text-slate-300 dark:text-slate-600 mt-2">
+          {tagline}
+        </p>
       </div>
     </footer>
   );

@@ -18,7 +18,7 @@ const Header = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 backdrop-blur-md bg-white/40 dark:bg-slate-900/50 shadow-[0_4px_30px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_30px_rgba(0,0,0,0.1)] border-b border-white/20 dark:border-slate-700/30">
       <div className="text-xl font-light tracking-wider">
-        <span className="font-medium">S</span>BS.
+        <span className="font-medium">Soumita</span> Bhattacharya Sen
       </div>
       <nav className="flex items-center gap-6">
         {/* Desktop Navigation Links */}

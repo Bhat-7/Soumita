@@ -40,7 +40,7 @@ const LinkedinIcon = ({ size = 20, strokeWidth = 1.5 }) => (
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   const portfolioData = useSelector((state) => state.ui.portfolioData);
-  const { contact, name, built_by, tagline } = portfolioData.personal;
+  const { contact, name, built_by, buildByLink, tagline } = portfolioData.personal;
 
   return (
     <footer className="w-full py-12 mt-12 border-t border-slate-200/50 dark:border-slate-800/50 relative z-10">
@@ -76,7 +76,13 @@ const Footer = () => {
       </div>
       <div className="flex flex-col items-center space-y-2 mt-4 text-center">
         <p className="text-sm font-light text-slate-400 dark:text-slate-500 tracking-wider">
-          &copy; {currentYear} {name}. All rights reserved. {built_by}
+          &copy; {currentYear} {name}. All rights reserved. <a href={buildByLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={built_by}
+            className="text-slate-400 cursor-pointer dark:text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors duration-300 border-b border-transparent hover:border-slate-400 dark:hover:border-slate-500 pb-1">
+            {built_by}
+          </a>
         </p>
         <p className="text-xs text-slate-300 dark:text-slate-600 mt-2">
           {tagline}

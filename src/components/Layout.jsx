@@ -11,8 +11,12 @@ const Layout = () => {
   const dispatch = useDispatch();
   const { isDarkMode, isAudioPlaying } = useSelector((state) => state.ui);
 
+  const { audios } = useSelector(
+    (state) => state.ui.portfolioData.background_assets,
+  );
+
   // Using a highly reliable test audio URL to prevent CORS/403 blocks
-  useAudio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");
+  useAudio(audios[0]);
 
   // Apply Tailwind's dark mode class to the HTML root
   useEffect(() => {

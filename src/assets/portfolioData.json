@@ -12,6 +12,7 @@
     "profile_picture": "/assets/images/profile.png",
     "downloadPDF": "/Soumita Bhattacharya Sen-CV.pdf",
     "built_by": "Designed and Built with ❤️ by Debayan Sen.",
+    "buildByLink": "https://www.debayansen.com",
     "tagline": "Quiet Luxury in Data Visualization"
   },
   "experience": [
@@ -26,7 +27,13 @@
         "Architected scalable Power BI data models handling 50M+ rows of transactional data.",
         "Collaborated with executive stakeholders to define key performance indicators (KPIs) and operational metrics."
       ],
-      "technologies": ["Power BI", "SAP BO", "Tableau", "SQL", "Python"]
+      "technologies": [
+        "Power BI",
+        "SAP BO",
+        "Tableau",
+        "SQL",
+        "Python"
+      ]
     },
     {
       "id": 2,
@@ -48,7 +55,11 @@
     }
   ],
   "skills": {
-    "BI_Tools": ["Power BI (DAX, Power Query)", "Tableau", "Looker"],
+    "BI_Tools": [
+      "Power BI (DAX, Power Query)",
+      "Tableau",
+      "Looker"
+    ],
     "Languages_and_Databases": [
       "SQL",
       "PostgreSQL",
@@ -61,7 +72,11 @@
       "Agile/Scrum Methodologies",
       "Data Storytelling"
     ],
-    "AI_Skills": ["Be10x", "Claude Ceritified", "ChatGPT Certified"]
+    "AI_Skills": [
+      "Be10x",
+      "Claude Ceritified",
+      "ChatGPT Certified"
+    ]
   },
   "recommendations": [
     {
@@ -79,11 +94,32 @@
   ],
   "personal_interests": {
     "travel_destinations": [
-      "Singapore",
-      "Karbi, Thailand",
-      "Phuket, Thailand",
-      "Mumbai, India",
-      "Bengalore, India"
+      {
+        "place": "Singapore",
+        "images": [
+          "/assets/images/singapore.png"
+        ]
+      },
+      {
+        "place": "Krabi, Thailand",
+        "images": [
+          "/assets/images/krabi.png"
+        ]
+      },
+      {
+        "place": "Phuket, Thailand",
+        "images": [
+          "/assets/images/phuket.png"
+        ]
+      },
+      {
+        "place": "Mumbai, India",
+        "images": []
+      },
+      {
+        "place": "Bengaluru, India",
+        "images": []
+      }
     ],
     "favorite_flowers": [
       "Orchids",
@@ -100,8 +136,7 @@
       "/assets/images/carnitions-bg.jpg"
     ],
     "audios": [
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+      "/assets/music/audio1.mpeg"
     ]
   }
 }

@@ -4,7 +4,7 @@ import DestinationCarousel from "./DestinationCarousel";
 
 const PersonalInterests = ({ interests }) => {
   return (
-    <section className="py-16 max-w-4xl mx-auto px-4 border-t border-slate-200/50 dark:border-slate-800/50 mt-12">
+    <section className="py-16 w-full mx-auto px-4 border-t border-slate-200/50 dark:border-slate-800/50 mt-12">
       <div className="flex flex-col gap-16">
         {/* Travel Interests */}
         <div className="flex flex-col items-center text-center space-y-6">

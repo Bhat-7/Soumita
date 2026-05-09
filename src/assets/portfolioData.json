@@ -58,24 +58,40 @@
     "BI_Tools": [
       "Power BI (DAX, Power Query)",
       "Tableau",
-      "Looker"
+      "Google Looker",
+      "QlikView",
+      "QlikSense",
+      "SAP Analytics Cloud",
+      "Scikit-learn",
+      "MatplotLib",
+      "Tableau Pulse"
     ],
     "Languages_and_Databases": [
+      "Python (Pandas, NumPy)",
       "SQL",
       "PostgreSQL",
-      "Python (Pandas, NumPy)",
-      "T-SQL"
+      "T-SQL",
+      "PL-SQL",
+      "GitHub"
     ],
     "Soft_Skills": [
       "Stakeholder Management",
       "Requirement Gathering",
       "Agile/Scrum Methodologies",
-      "Data Storytelling"
+      "Data Storytelling",
+      "Application Lifecycle Management",
+      "Documentation"
     ],
     "AI_Skills": [
       "Be10x",
       "Claude Ceritified",
       "ChatGPT Certified"
+    ],
+    "Certifications": [
+      "Fabric Analytics Engineer Associate",
+      "Power BI Data Analyst Associate",
+      "Power Platform App Maker Associate",
+      "Tableau Desktop Specialist"
     ]
   },
   "recommendations": [
@@ -113,12 +129,22 @@
         ]
       },
       {
-        "place": "Mumbai, India",
-        "images": []
+        "place": "Bengaluru, India",
+        "images": [
+          "/assets/images/bengalore.jpg"
+        ]
       },
       {
-        "place": "Bengaluru, India",
-        "images": []
+        "place": "Mumbai, India",
+        "images": [
+          "/assets/images/mumbai.jpg"
+        ]
+      },
+      {
+        "place": "Kolkata, India",
+        "images": [
+          "/assets/images/kolkata.jpg"
+        ]
       }
     ],
     "favorite_flowers": [

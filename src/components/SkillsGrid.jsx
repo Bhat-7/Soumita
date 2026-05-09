@@ -9,6 +9,7 @@ const SkillsGrid = () => {
     Languages_and_Databases: <Database size={24} strokeWidth={1.5} />,
     Soft_Skills: <Users size={24} strokeWidth={1.5} />,
     AI_Skills: <BrainCircuit size={24} strokeWidth={1.5} />,
+    Certifications: <BrainCircuit size={24} strokeWidth={1.5} />,
   };
 
   const skills = useSelector((state) => state.ui.portfolioData.skills);

@@ -4,13 +4,38 @@ import { useSelector } from "react-redux";
 
 const ContactForm = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Mock submission for UI purposes
-    setIsSubmitted(true);
-    setTimeout(() => setIsSubmitted(false), 5000);
-    e.target.reset();
+    setIsSubmitting(true);
+    setError(null);
+
+    const form = e.target;
+    const data = new FormData(form);
+
+    try {
+      const response = await fetch("https://formspree.io/f/mjgljnbb", {
+        method: "POST",
+        body: data,
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      if (response.ok) {
+        setIsSubmitted(true);
+        form.reset();
+        setTimeout(() => setIsSubmitted(false), 5000);
+      } else {
+        setError("Oops! There was a problem submitting your form.");
+      }
+    } catch (err) {
+      setError("Oops! There was a problem submitting your form.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const backgroundImage = useSelector(
@@ -67,6 +92,7 @@ const ContactForm = () => {
                     <User size={18} strokeWidth={1.5} />
                   </div>
                   <input
+                    name="name"
                     type="text"
                     required
                     placeholder="Your Name"
@@ -80,6 +106,7 @@ const ContactForm = () => {
                     <Mail size={18} strokeWidth={1.5} />
                   </div>
                   <input
+                    name="email"
                     type="email"
                     required
                     placeholder="Email Address"
@@ -94,6 +121,7 @@ const ContactForm = () => {
                   <MessageSquare size={18} strokeWidth={1.5} />
                 </div>
                 <textarea
+                  name="message"
                   required
                   rows="5"
                   placeholder="What's on your mind?"
@@ -101,11 +129,18 @@ const ContactForm = () => {
                 ></textarea>
               </div>
 
+              {error && (
+                <div className="text-red-500 dark:text-red-400 text-sm text-center mb-4">
+                  {error}
+                </div>
+              )}
+
               <button
                 type="submit"
-                className="w-full sm:w-auto px-8 py-3.5 flex items-center justify-center gap-2 rounded-xl bg-slate-800 hover:bg-slate-700 dark:bg-slate-200 dark:hover:bg-white text-white dark:text-slate-900 font-medium tracking-wide transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 group ml-auto"
+                disabled={isSubmitting}
+                className="w-full sm:w-auto px-8 py-3.5 flex items-center justify-center gap-2 rounded-xl bg-slate-800 hover:bg-slate-700 dark:bg-slate-200 dark:hover:bg-white text-white dark:text-slate-900 font-medium tracking-wide transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 group ml-auto disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                <span>Send Message</span>
+                <span>{isSubmitting ? "Sending..." : "Send Message"}</span>
                 <Send
                   size={16}
                   strokeWidth={2}

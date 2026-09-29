@@ -1,0 +1,369 @@
+/* ─────────────────────────────────────────────────────────────
+   Two modes, switched by a class on <html> (set before paint):
+   - html.tunnel  → sticky 3D stage driven by scroll
+   - default      → plain stacked cards (no JS / reduced motion)
+   ───────────────────────────────────────────────────────────── */
+
+/* ---------- shared: the station card ---------- */
+
+.station {
+  --pad: clamp(22px, 3.4vw, 44px);
+  position: relative;
+  width: min(760px, calc(100vw - 32px));
+  padding: var(--pad);
+  border-radius: 32px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: background 300ms ease;
+}
+
+/* ---------- flat (default) ---------- */
+
+.track {
+  position: relative;
+}
+
+.world {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  padding: 104px 0 64px;
+}
+
+.ring,
+.fog,
+.readout,
+.hint,
+.progress,
+.journey {
+  display: none;
+}
+
+/* ---------- tunnel ---------- */
+
+:global(html.tunnel) .track {
+  height: calc((var(--station-count) - 1) * var(--segment-vh) * 1vh + 100vh);
+}
+
+:global(html.tunnel) .stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Flat on purpose: every object sits on the tunnel's axis, so JS fakes perspective with a
+   scale about the centre (lib/tunnel.ts depthScale) instead of real 3D — no preserve-3d. */
+:global(html.tunnel) .world {
+  display: block;
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  isolation: isolate; /* depth z-indexes stay inside the stage, under the HUD */
+}
+
+:global(html.tunnel) .station {
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  max-height: calc(100vh - 150px);
+  transform: translate(-50%, -50%) scale(0);
+  visibility: hidden; /* JS reveals, scales and stacks the ones in range */
+}
+
+/* one per station, a segment apart; JS measures them and settles the page onto them */
+.snap {
+  display: none;
+}
+
+:global(html.tunnel) .snap {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: calc(var(--i) * var(--segment-vh) * 1vh);
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+/* rings: segmented like donut charts. The element carries JS opacity; ::before carries the colour. */
+:global(html.tunnel) .ring {
+  display: block;
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  width: calc(var(--tunnel-r, 600px) * 2);
+  height: calc(var(--tunnel-r, 600px) * 2);
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.ring::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 14px solid;
+  border-color: var(--s1) var(--s2) var(--s3) var(--s4);
+  transform: rotate(var(--spin));
+  opacity: var(--ring-alpha);
+}
+
+.ringMajor::before {
+  border-width: 30px;
+}
+
+.ringLabel {
+  position: absolute;
+  top: -58px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px 12px 14px;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  font-size: 34px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--ink);
+}
+
+.ringDot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--hue);
+}
+
+:global(html.tunnel) .fog {
+  display: block;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 52%, transparent 60%, var(--bg) 100%);
+}
+
+/* ---------- HUD ---------- */
+
+:global(html.tunnel) .readout {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  position: fixed;
+  left: clamp(16px, 3vw, 48px);
+  bottom: clamp(22px, 4.4vh, 40px);
+  z-index: 20;
+  pointer-events: none;
+}
+
+.year {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 800;
+  font-size: clamp(56px, 6.2vw, 88px);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--year);
+}
+
+.caption {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-bottom: 4px;
+  max-width: 240px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--ink-soft);
+}
+
+.captionStep {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+:global(html.tunnel) .hint {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: fixed;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+  z-index: 20;
+  padding: 8px 14px 8px 10px;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  transition: opacity 500ms ease;
+  pointer-events: none;
+}
+
+.hint[data-visible='false'] {
+  opacity: 0;
+}
+
+.hintLine {
+  order: -1;
+  width: 18px;
+  height: 28px;
+  border-radius: 10px;
+  border: 1.5px solid var(--muted);
+  position: relative;
+}
+
+.hintLine::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 5px;
+  width: 3px;
+  height: 7px;
+  margin-left: -1.5px;
+  border-radius: 2px;
+  background: var(--primary);
+  animation: wheel 1.6s ease-in-out infinite;
+}
+
+@keyframes wheel {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  70% {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+}
+
+:global(html.tunnel) .progress {
+  display: block;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 6px;
+  z-index: 20;
+  background: var(--track);
+}
+
+.progressBar {
+  height: 100%;
+  background: var(--hue, var(--primary));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: background 300ms ease;
+}
+
+/* numbered station rail */
+:global(html.tunnel) .journey {
+  display: block;
+  position: fixed;
+  right: clamp(12px, 2.6vw, 40px);
+  top: 52%;
+  transform: translateY(-50%);
+  z-index: 20;
+}
+
+.journey ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.journey a {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.step {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  border: 2px solid var(--hue);
+  background: var(--surface);
+  color: var(--hue-ink);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  transition:
+    background 250ms ease,
+    color 250ms ease,
+    transform 250ms ease;
+}
+
+.journey a:hover .step {
+  transform: translateX(-3px);
+}
+
+.journey a[aria-current='step'] .step {
+  background: var(--hue-band);
+  border-color: var(--hue-band);
+  color: #ffffff;
+}
+
+.stepLabel {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateX(6px);
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease;
+  pointer-events: none;
+}
+
+.journey a:hover .stepLabel,
+.journey a:focus-visible .stepLabel {
+  opacity: 1;
+  transform: none;
+}
+
+@media (max-width: 860px) {
+  :global(html.tunnel) .journey,
+  :global(html.tunnel) .hint {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .station {
+    border-radius: 26px;
+  }
+
+  :global(html.tunnel) .station {
+    top: calc(50% - 20px);
+    max-height: calc(100svh - 190px);
+  }
+
+  :global(html.tunnel) .readout {
+    bottom: 22px;
+  }
+}

@@ -1,16 +1,44 @@
-# React + Vite
+# Soumita Bhattacharya Sen — Prism variant
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Next.js 16 (App Router) + React 19 + TypeScript. No runtime deps beyond Next/React. CSS Modules, no Tailwind.
 
-Currently, two official plugins are available:
+Colourful take on the time-tunnel layout. **Light "Prism" theme is the default; dark uses the "Aurora" palette.** Every stop owns a hue (Wipro tangerine, TCS cobalt, toolkit teal, practice sun, certifications magenta …) that drives its pill, role band, chips, rail button and the progress bar. The tunnel rings are segmented like donut charts.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Scroll moves a camera through a 3D tunnel (CSS `perspective` + `preserve-3d`, no WebGL). Each career stop is a station on the depth axis; the camera dwells on a station, then eases to the next while the HUD year rolls (2014 → 2016 → now).
 
-## React Compiler
+```bash
+npm install
+npm run dev        # http://localhost:3000
+npm test           # tunnel maths (vitest)
+npm run typecheck
+npm run build
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Structure
 
-## Expanding the ESLint configuration
+```
+src/
+  app/globals.css             theme tokens (light/dark) + [data-hue] mapping — change colours here
+  app/layout.tsx              fonts, metadata, pre-paint boot script (theme + motion mode)
+  app/page.tsx                station order → <TimeTunnel>
+  data/portfolio.ts           all content, typed. Edit here.
+  lib/tunnel.ts               pure camera/visibility/year maths (unit tested)
+  components/tunnel/          TimeTunnel (client): sticky stage, rings, rails, HUD, rAF loop
+  components/stations/        station content (server) + ContactForm (client, Formspree)
+  components/header/          top bar + theme toggle
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## How it works
+
+- `html.tunnel` is added before first paint only when JS runs **and** `prefers-reduced-motion` is not set. Without it the same markup renders as a plain stacked page — that's the no-JS, reduced-motion and SEO path.
+- One rAF-throttled scroll handler writes `transform` on the world and `opacity/visibility/filter/pointer-events` on stations and rings. No React re-render per frame; React only re-renders when the active station changes.
+- Only the focal station takes pointer events. Tabbing into any station scrolls the camera to it. `←/→` or `[ ]` jump between stations. In-page anchors (`#contact`, etc.) are intercepted and mapped to scroll positions.
+- Tuning knobs live at the top of `lib/tunnel.ts`: `STATION_GAP`, `SEGMENT_VH`, `DWELL`, `RINGS_PER_GAP`. `PERSPECTIVE` must match the CSS value in `TimeTunnel.module.css`.
+- Removing all recommendations drops that station automatically.
+- Theme: saved choice wins, otherwise light. Toggle in the header persists to localStorage.
+- A stop's colour is its `hue` (roles and skill groups in `data/portfolio.ts`, the rest in `app/page.tsx`).
+- The intro timeline chart is computed from the role dates, so it stays correct as time passes.
+
+## Before shipping
+
+Search the code for `VERIFY:` — content issues carried over from the live site.

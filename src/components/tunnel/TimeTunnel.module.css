@@ -52,18 +52,16 @@
   top: 0;
   height: 100vh;
   overflow: hidden;
-  perspective: 1000px; /* keep in sync with PERSPECTIVE in lib/tunnel.ts */
-  perspective-origin: 50% 52%;
 }
 
+/* Flat on purpose: every object sits on the tunnel's axis, so JS fakes perspective with a
+   scale about the centre (lib/tunnel.ts depthScale) instead of real 3D — no preserve-3d. */
 :global(html.tunnel) .world {
   display: block;
   position: absolute;
   inset: 0;
   padding: 0;
-  transform-style: preserve-3d;
-  will-change: transform;
-  /* NB: no opacity / filter / overflow here — any of those flattens preserve-3d */
+  isolation: isolate; /* depth z-indexes stay inside the stage, under the HUD */
 }
 
 :global(html.tunnel) .station {
@@ -71,9 +69,23 @@
   top: 52%;
   left: 50%;
   max-height: calc(100vh - 150px);
-  transform: translate(-50%, -50%) translate3d(0, 0, calc(var(--z) * -1px));
-  backface-visibility: hidden;
-  visibility: hidden; /* JS reveals the ones in range */
+  transform: translate(-50%, -50%) scale(0);
+  visibility: hidden; /* JS reveals, scales and stacks the ones in range */
+}
+
+/* one per station, a segment apart; JS measures them and settles the page onto them */
+.snap {
+  display: none;
+}
+
+:global(html.tunnel) .snap {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: calc(var(--i) * var(--segment-vh) * 1vh);
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
 }
 
 /* rings: segmented like donut charts. The element carries JS opacity; ::before carries the colour. */
@@ -84,8 +96,7 @@
   left: 50%;
   width: calc(var(--tunnel-r, 600px) * 2);
   height: calc(var(--tunnel-r, 600px) * 2);
-  transform: translate(-50%, -50%) translate3d(0, 0, calc(var(--z) * -1px));
-  backface-visibility: hidden;
+  transform: translate(-50%, -50%) scale(0);
   pointer-events: none;
   visibility: hidden;
 }

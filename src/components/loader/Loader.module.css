@@ -17,10 +17,16 @@
     visibility 0s linear 500ms;
 }
 
-:global(html.loading) .loader {
+:global(html.loading) .loader,
+:global(html.greeting) .loader {
   opacity: 1;
   visibility: visible;
   transition: none;
+}
+
+/* the welcome line waits for clicks anywhere, so show that it's interactive */
+.loader[data-phase='greeting'] {
+  cursor: pointer;
 }
 
 .mark {
@@ -32,8 +38,13 @@
   transition: scale 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* the mark settles upright while the welcome line holds */
+.loader[data-phase='greeting'] .mark {
+  animation: none;
+}
+
 /* on exit the mark swells slightly as the screen fades */
-:global(html:not(.loading)) .mark {
+:global(html:not(.loading):not(.greeting)) .mark {
   scale: 1.25;
 }
 
@@ -71,6 +82,19 @@
   letter-spacing: -0.02em;
   color: var(--ink);
   animation: rise 600ms ease 350ms both;
+}
+
+.greeting {
+  margin: 0;
+  padding: 0 16px;
+  text-align: center;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 800;
+  font-size: clamp(28px, 6vw, 56px);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--ink);
+  animation: rise 700ms ease both;
 }
 
 .srOnly {

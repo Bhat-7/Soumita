@@ -11,9 +11,14 @@ import {
 import {
   RINGS_PER_GAP,
   SEGMENT_VH,
+  SETTLE_IDLE_MS,
   STATION_GAP,
-  cameraZ,
+  depthScale,
+  followCamera,
+  restingCamera,
   ringVisual,
+  settleTarget,
+  stationAt,
   stationVisuals,
   stationZ,
   yearAt,
@@ -41,12 +46,19 @@ interface TimeTunnelProps {
 const RINGS_BEFORE = 2;
 const RINGS_AFTER = 4 * RINGS_PER_GAP;
 
-function applyVisual(el: HTMLElement | null, v: Visual) {
+/**
+ * Places one tunnel object `d` px ahead of the camera. Everything sits on the tunnel's axis,
+ * so perspective is a plain scale about the centre; nearer objects stack on top.
+ */
+function applyVisual(el: HTMLElement | null, v: Visual, d: number) {
   if (!el) return;
+  // out of range → out of the layout entirely, so the browser keeps nothing around for it
+  el.style.display = v.hidden ? 'none' : '';
   el.style.visibility = v.hidden ? 'hidden' : 'visible';
   if (v.hidden) return;
+  el.style.transform = `translate(-50%, -50%) scale(${depthScale(d).toFixed(4)})`;
+  el.style.zIndex = String(Math.round(20000 - d));
   el.style.opacity = v.opacity.toFixed(3);
-  el.style.filter = v.blur > 0.2 ? `blur(${v.blur.toFixed(1)}px)` : '';
 }
 
 const isTunnelMode = () =>
@@ -55,9 +67,9 @@ const isTunnelMode = () =>
 export function TimeTunnel({ stations, presentYear }: TimeTunnelProps) {
   const count = stations.length;
   const trackRef = useRef<HTMLDivElement>(null);
-  const worldRef = useRef<HTMLDivElement>(null);
   const stationRefs = useRef<(HTMLElement | null)[]>([]);
   const ringRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const snapRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const yearRef = useRef<HTMLSpanElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
@@ -68,7 +80,12 @@ export function TimeTunnel({ stations, presentYear }: TimeTunnelProps) {
   const ringEnd = (count - 1) * RINGS_PER_GAP + RINGS_AFTER;
   const rings = Array.from({ length: ringEnd - ringStart + 1 }, (_, i) => ringStart + i);
 
-  const segmentPx = () => (window.innerHeight * SEGMENT_VH) / 100;
+  // measured from the station markers, so JS and CSS always agree (100vh ≠ innerHeight on mobile)
+  const segmentPx = () =>
+    snapRefs.current[1]?.offsetTop || (window.innerHeight * SEGMENT_VH) / 100;
+
+  /** Where the page last came to rest on a station, and whether we're gliding there now. */
+  const settle = useRef({ restY: 0, gliding: false });
 
   const scrollToStation = useCallback(
     (index: number, behavior: ScrollBehavior = 'smooth') => {
@@ -78,6 +95,7 @@ export function TimeTunnel({ stations, presentYear }: TimeTunnelProps) {
         document.getElementById(id)?.scrollIntoView({ behavior });
       } else {
         const top = (trackRef.current?.offsetTop ?? 0) + i * segmentPx();
+        settle.current = { restY: top, gliding: behavior === 'smooth' };
         window.scrollTo({ top, behavior });
       }
       if (id) history.replaceState(null, '', `#${id}`);
@@ -89,22 +107,29 @@ export function TimeTunnel({ stations, presentYear }: TimeTunnelProps) {
     const root = document.documentElement;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
     let frame = 0;
+    let last = 0;
+    // null until the first frame, which places the camera without flying there
+    let camera: ReturnType<typeof restingCamera> | null = null;
 
-    const render = () => {
+    const render = (now: number) => {
       frame = 0;
       if (!isTunnelMode()) return;
       const track = trackRef.current;
-      const world = worldRef.current;
-      if (!track || !world) return;
+      if (!track) return;
 
       const progress = Math.max(0, (window.scrollY - track.offsetTop) / segmentPx());
-      const cam = cameraZ(progress, count);
-      world.style.transform = `translate3d(0, 0, ${cam.toFixed(1)}px)`;
+      const target = stationAt(progress, count) * STATION_GAP;
+      const dt = last ? (now - last) / 1000 : 0;
+      last = now;
+      camera = camera ? followCamera(camera, target, dt) : restingCamera(target);
+      const cam = camera.z;
+      const at = cam / STATION_GAP;
 
-      const visuals = stationVisuals(stationRefs.current.map((_, i) => stationZ(i) - cam));
+      const distances = stationRefs.current.map((_, i) => stationZ(i) - cam);
+      const visuals = stationVisuals(distances);
       stationRefs.current.forEach((el, i) => {
         const v = visuals[i];
-        applyVisual(el, v);
+        applyVisual(el, v, distances[i]);
         if (el) {
           el.style.pointerEvents = v.active ? 'auto' : 'none';
           el.dataset.active = String(v.active);
@@ -112,26 +137,32 @@ export function TimeTunnel({ stations, presentYear }: TimeTunnelProps) {
       });
 
       ringRefs.current.forEach((el, i) => {
-        const z = (rings[i] * STATION_GAP) / RINGS_PER_GAP;
-        applyVisual(el, ringVisual(z - cam));
+        const d = (rings[i] * STATION_GAP) / RINGS_PER_GAP - cam;
+        applyVisual(el, ringVisual(d), d);
       });
 
-      const y = yearAt(progress, years);
-      if (yearRef.current) yearRef.current.textContent = String(y);
+      if (yearRef.current) yearRef.current.textContent = String(yearAt(at, years));
       if (barRef.current) {
-        barRef.current.style.transform = `scaleX(${Math.min(1, progress / Math.max(1, count - 1))})`;
+        barRef.current.style.transform = `scaleX(${Math.min(1, at / Math.max(1, count - 1))})`;
       }
 
-      const nearest = Math.round(cam / STATION_GAP);
+      // keep animating until the camera has landed
+      if (camera.z !== target || camera.v !== 0) schedule();
+      else last = 0;
+
+      const nearest = Math.round(at);
       if (nearest !== activeRef.current) {
         activeRef.current = nearest;
         setActive(nearest);
+        // keep the address in step with the camera, so a reload or shared link lands here
+        const id = stations[nearest]?.id;
+        history.replaceState(null, '', nearest === 0 || !id ? location.pathname + location.search : `#${id}`);
       }
     };
 
-    const schedule = () => {
+    function schedule() {
       if (!frame) frame = requestAnimationFrame(render);
-    };
+    }
 
     const sizeRings = () => {
       const r = Math.max(420, Math.max(window.innerWidth, window.innerHeight) * 0.62);
@@ -144,14 +175,45 @@ export function TimeTunnel({ stations, presentYear }: TimeTunnelProps) {
       if (reduce.matches) {
         // hand control back to normal document flow
         stationRefs.current.forEach((el) => el?.removeAttribute('style'));
-        worldRef.current?.removeAttribute('style');
+        camera = null;
       }
       schedule();
     };
 
+    // Once scrolling goes quiet, glide onto a station so the camera never parks between two.
+    let idle = 0;
+    const settleNow = () => {
+      const track = trackRef.current;
+      if (!track || !isTunnelMode()) return;
+      const seg = segmentPx();
+      const y = window.scrollY - track.offsetTop;
+      const i = settleTarget(y, settle.current.restY - track.offsetTop, seg, count);
+      const top = track.offsetTop + i * seg;
+      settle.current = { restY: top, gliding: Math.abs(window.scrollY - top) > 1 };
+      if (settle.current.gliding) window.scrollTo({ top, behavior: 'smooth' });
+    };
+    const onScroll = () => {
+      schedule();
+      const s = settle.current;
+      if (s.gliding) {
+        // our own glide: done once it arrives
+        if (Math.abs(window.scrollY - s.restY) < 1) s.gliding = false;
+        return;
+      }
+      clearTimeout(idle);
+      idle = window.setTimeout(settleNow, SETTLE_IDLE_MS);
+    };
+    // any new input from the visitor takes over from a glide in progress
+    const takeOver = () => {
+      settle.current.gliding = false;
+    };
+    const inputs = ['wheel', 'touchstart', 'keydown', 'pointerdown'] as const;
+
     sizeRings();
-    window.addEventListener('scroll', schedule, { passive: true });
+    settle.current = { restY: window.scrollY, gliding: false };
+    window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', sizeRings);
+    inputs.forEach((t) => window.addEventListener(t, takeOver, { passive: true }));
     reduce.addEventListener('change', onMotionChange);
 
     // deep links: /#contact
@@ -160,8 +222,10 @@ export function TimeTunnel({ stations, presentYear }: TimeTunnelProps) {
 
     return () => {
       cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', schedule);
+      clearTimeout(idle);
+      window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', sizeRings);
+      inputs.forEach((t) => window.removeEventListener(t, takeOver));
       reduce.removeEventListener('change', onMotionChange);
     };
     // rings/years are derived from `count`/`stations`; re-running on those is intended
@@ -200,7 +264,7 @@ export function TimeTunnel({ stations, presentYear }: TimeTunnelProps) {
     <>
       <div ref={trackRef} className={styles.track} style={trackStyle}>
         <div className={styles.stage}>
-          <div ref={worldRef} className={styles.world}>
+          <div className={styles.world}>
             {rings.map((k, i) => {
               const stationIndex = k % RINGS_PER_GAP === 0 ? k / RINGS_PER_GAP : -1;
               const station = stations[stationIndex];
@@ -216,7 +280,6 @@ export function TimeTunnel({ stations, presentYear }: TimeTunnelProps) {
                   className={station ? `${styles.ring} ${styles.ringMajor}` : styles.ring}
                   style={
                     {
-                      '--z': (k * STATION_GAP) / RINGS_PER_GAP,
                       '--spin': `${k * 37}deg`,
                       '--s1': seg(0),
                       '--s2': seg(1),
@@ -245,7 +308,6 @@ export function TimeTunnel({ stations, presentYear }: TimeTunnelProps) {
                 aria-label={s.caption}
                 className={styles.station}
                 data-hue={s.hue}
-                style={{ '--z': stationZ(i) } as CSSProperties}
                 onFocusCapture={() => {
                   if (isTunnelMode() && activeRef.current !== i) scrollToStation(i);
                 }}
@@ -256,6 +318,18 @@ export function TimeTunnel({ stations, presentYear }: TimeTunnelProps) {
           </div>
           <div aria-hidden className={styles.fog} />
         </div>
+        {/* one marker per station, a segment apart: where the page settles, and how long a segment is */}
+        {stations.map((s, i) => (
+          <span
+            key={`snap-${s.id}`}
+            aria-hidden
+            ref={(el) => {
+              snapRefs.current[i] = el;
+            }}
+            className={styles.snap}
+            style={{ '--i': i } as CSSProperties}
+          />
+        ))}
       </div>
 
       <nav aria-label="Journey" className={styles.journey}>

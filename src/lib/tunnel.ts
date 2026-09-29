@@ -48,19 +48,30 @@ export interface Visual {
   active: boolean;
 }
 
-/** Stations: crisp at the focal plane, fading into fog ahead, fading out fast once passed. */
+/** How far ahead a station stays fully opaque before the fog starts. */
+const SOLID_AHEAD = 0.6 * STATION_GAP;
+/** How far past the camera a station survives. Short, so it never lingers as a magnified ghost. */
+const PASSED_FADE = 0.3 * PERSPECTIVE;
+/** A passed station stays solid this far, then fades over the rest — a quick, clean handover. */
+const PASSED_HOLD = 0.15 * PERSPECTIVE;
+
+/**
+ * Stations: crisp at the focal plane, fading into fog ahead, fading out fast once passed.
+ * Both ends matter when scrolling back: the station being left must stay solid so nothing
+ * behind it shows through, and the one being returned to must only appear near its own
+ * plane rather than as an oversized wash across the screen.
+ */
 export function stationVisual(d: number): Visual {
   const G = STATION_GAP;
-  if (d > 3.2 * G || d < -0.5 * PERSPECTIVE) {
+  if (d > 3.2 * G || d < -PASSED_FADE) {
     return { hidden: true, opacity: 0, blur: 0, active: false };
   }
   let opacity: number;
   if (d >= 0) {
-    // fully opaque near the focal plane, then fog out towards 3G
-    opacity = 1 - smoothstep(clamp((d - 0.15 * G) / (2.85 * G)));
+    // fully opaque while it's the next thing ahead, then fog out towards 3.2G
+    opacity = 1 - smoothstep(clamp((d - SOLID_AHEAD) / (3.2 * G - SOLID_AHEAD)));
   } else {
-    // passing through the camera: gone by -0.45 * perspective
-    opacity = 1 - smoothstep(clamp(-d / (0.45 * PERSPECTIVE)));
+    opacity = 1 - smoothstep(clamp((-d - PASSED_HOLD) / (PASSED_FADE - PASSED_HOLD)));
   }
   const blur = d > 0.25 * G ? Math.min(6, ((d - 0.25 * G) / G) * 3) : 0;
   return {
@@ -69,6 +80,24 @@ export function stationVisual(d: number): Visual {
     blur,
     active: Math.abs(d) < 0.2 * G,
   };
+}
+
+/**
+ * Visuals for every station at once, given each one's distance from the camera.
+ * A station that's passing through the camera (d < 0) is translucent, so whatever is
+ * ahead of it would show through. Stations ahead are dimmed by however solid that
+ * passing station is, which turns the handover into a clean cross-fade in both
+ * scroll directions.
+ */
+export function stationVisuals(distances: number[]): Visual[] {
+  const visuals = distances.map(stationVisual);
+  const cover = Math.max(0, ...visuals.map((v, i) => (distances[i] < 0 ? v.opacity : 0)));
+  if (cover === 0) return visuals;
+  return visuals.map((v, i) => {
+    if (distances[i] < 0 || v.hidden) return v;
+    const opacity = v.opacity * (1 - cover);
+    return { ...v, opacity, hidden: opacity < 0.01 };
+  });
 }
 
 /** Rings: visible from far away, dissolve just before they wrap around the viewer. */

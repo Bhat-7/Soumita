@@ -63,8 +63,8 @@ export const profile: Profile = {
   tagline: 'Quiet luxury in data visualization',
   summary:
     'Results-driven data analyst with 11+ years of turning raw data into strategic insight — Power BI, Tableau, Qlik, Alteryx and Looker on the front, SQL, Azure Databricks and Informatica PowerCenter underneath. Currently extending into machine learning, statistical analysis and data modelling.',
-  // VERIFY: the live site's /assets/images/profile.png returns 404. Drop a portrait into /public and set it here.
-  photo: undefined,
+  // head-and-shoulders crop of /profile.png (the full original is used for link previews)
+  photo: '/portrait.jpg',
   resumeHref: '/Soumita Bhattacharya Sen-CV.pdf',
   contact: {
     email: 'sbhattacharyaa3@gmail.com',

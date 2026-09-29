@@ -14,7 +14,7 @@ import {
   STATION_GAP,
   cameraZ,
   ringVisual,
-  stationVisual,
+  stationVisuals,
   stationZ,
   yearAt,
   type Visual,
@@ -101,8 +101,9 @@ export function TimeTunnel({ stations, presentYear }: TimeTunnelProps) {
       const cam = cameraZ(progress, count);
       world.style.transform = `translate3d(0, 0, ${cam.toFixed(1)}px)`;
 
+      const visuals = stationVisuals(stationRefs.current.map((_, i) => stationZ(i) - cam));
       stationRefs.current.forEach((el, i) => {
-        const v = stationVisual(stationZ(i) - cam);
+        const v = visuals[i];
         applyVisual(el, v);
         if (el) {
           el.style.pointerEvents = v.active ? 'auto' : 'none';

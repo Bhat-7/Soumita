@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import { Bricolage_Grotesque, Instrument_Sans, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
+import { Loader } from '@/components/loader/Loader';
+import { profile } from '@/data/portfolio';
 
 const display = Bricolage_Grotesque({
   subsets: ['latin'],
@@ -28,8 +30,10 @@ export const metadata: Metadata = {
     type: 'profile',
     title: 'Soumita Bhattacharya Sen · Senior BI Developer',
     description,
+    images: [{ url: '/profile.png', width: 800, height: 800, alt: 'Portrait of Soumita Bhattacharya Sen' }],
   },
-  twitter: { card: 'summary_large_image' },
+  // square photo, so the compact card rather than the wide banner
+  twitter: { card: 'summary' },
 };
 
 export const viewport: Viewport = {
@@ -44,8 +48,10 @@ export const viewport: Viewport = {
  * - resolves theme: a saved choice wins, otherwise light (Prism) is the default
  * - opts into the 3D tunnel only when JS runs and the user hasn't asked for reduced motion.
  *   Without it, the page renders as a plain stacked document.
+ * - shows the loading screen (html.loading); <Loader> clears it once the page is ready.
+ *   The timeout is a safety net so a failed script can never leave the page covered.
  */
-const bootScript = `(function(){try{var d=document.documentElement;var t=localStorage.getItem('theme');if(t!=='dark'){t='light'}d.dataset.theme=t;if(!matchMedia('(prefers-reduced-motion: reduce)').matches){d.classList.add('tunnel')}}catch(e){}})();`;
+const bootScript = `(function(){var d=document.documentElement;d.classList.add('loading');setTimeout(function(){d.classList.remove('loading')},10000);try{var t=localStorage.getItem('theme');if(t!=='dark'){t='light'}d.dataset.theme=t;if(!matchMedia('(prefers-reduced-motion: reduce)').matches){d.classList.add('tunnel')}}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -63,6 +69,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to contact
         </a>
         {children}
+        <Loader name={profile.shortName.toLowerCase()} />
       </body>
     </html>
   );

@@ -7,6 +7,7 @@ import {
   ringVisual,
   segmentEase,
   stationVisual,
+  stationVisuals,
   yearAt,
 } from './tunnel';
 
@@ -51,6 +52,22 @@ describe('visibility', () => {
   it('fades stations with distance', () => {
     expect(stationVisual(STATION_GAP).opacity).toBeLessThan(1);
     expect(stationVisual(2 * STATION_GAP).opacity).toBeLessThan(stationVisual(STATION_GAP).opacity);
+  });
+  it('keeps the station being left solid so nothing behind bleeds through', () => {
+    expect(stationVisual(0.5 * STATION_GAP).opacity).toBe(1);
+  });
+  it('drops a passed station before it is magnified into a full-screen ghost', () => {
+    expect(stationVisual(-400).hidden).toBe(true);
+    expect(stationVisual(-100).hidden).toBe(false);
+  });
+  it('cross-fades: stations ahead dim as a passing station turns solid', () => {
+    const [passing, ahead] = stationVisuals([-30, STATION_GAP - 30]);
+    expect(passing.opacity).toBeGreaterThan(0.9);
+    expect(ahead.opacity).toBeLessThan(0.1);
+    expect(passing.opacity + ahead.opacity).toBeLessThanOrEqual(1.01);
+  });
+  it('leaves stations alone when nothing is passing the camera', () => {
+    expect(stationVisuals([0, STATION_GAP])).toEqual([stationVisual(0), stationVisual(STATION_GAP)]);
   });
   it('dissolves rings before they wrap the viewer', () => {
     expect(ringVisual(-900).hidden).toBe(true);

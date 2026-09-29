@@ -23,6 +23,37 @@ function Pill({ index, children }: { index: number; children: ReactNode }) {
   );
 }
 
+/**
+ * Her photo cut to the logo's petal shape, ringed in the logo's four hues.
+ * `size` is the rendered width in px; the source is served resized by next/image.
+ */
+function Portrait({
+  profile,
+  size,
+  priority = false,
+  className,
+}: {
+  profile: Profile;
+  size: 'lg' | 'sm';
+  priority?: boolean;
+  className?: string;
+}) {
+  if (!profile.photo) return null;
+  const px = size === 'lg' ? 132 : 64;
+  return (
+    <span className={`${styles.portrait} ${className ?? ''}`} data-size={size}>
+      <Image
+        src={profile.photo}
+        alt={size === 'lg' ? `Portrait of ${profile.name}` : ''}
+        width={px}
+        height={px}
+        sizes={`${px}px`}
+        priority={priority}
+      />
+    </span>
+  );
+}
+
 /** Bold the figures in a sentence ("50M+ rows") in the station's hue. */
 function Emphasise({ text }: { text: string }) {
   const parts = text.split(/(\d[\d,.]*\s?[KMB]?\+?)/g);
@@ -105,18 +136,9 @@ export function IntroStation({
     <div className={styles.stack}>
       <div className={styles.introHead}>
         <Pill index={0}>Start</Pill>
-        {profile.photo && (
-          <Image
-            src={profile.photo}
-            alt={`Portrait of ${profile.name}`}
-            width={112}
-            height={112}
-            priority
-            className={styles.portrait}
-          />
-        )}
+        <h1 className={styles.name}>{profile.name}</h1>
+        <Portrait profile={profile} size="lg" priority className={styles.introPortrait} />
       </div>
-      <h1 className={styles.name}>{profile.name}</h1>
       <p className={styles.roles}>
         <mark data-hue="cobalt">{first}</mark>, <mark data-hue="tangerine">{soften(second)}</mark> and{' '}
         <mark data-hue="magenta">{soften(third)}</mark>.
@@ -310,7 +332,10 @@ export function ContactStation({
   return (
     <div className={styles.stack}>
       <Pill index={index}>Arrival · present day</Pill>
-      <h2 className={styles.title}>Let’s solve it.</h2>
+      <div className={styles.contactHead}>
+        <Portrait profile={profile} size="sm" />
+        <h2 className={styles.title}>Let’s solve it.</h2>
+      </div>
       <p className={styles.body}>
         A dashboard that doesn’t put people to sleep, a Power BI vs Tableau debate, or just a hello — no
         query is too complex, unless it’s missing a JOIN.

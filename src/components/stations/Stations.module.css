@@ -94,18 +94,75 @@
 
 /* ---------- intro ---------- */
 
+/* pill and name on the left, portrait on the right spanning both */
 .introHead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    'pill  photo'
+    'name  photo';
+  align-items: start;
+  column-gap: 20px;
+  row-gap: 18px;
 }
 
+.introHead > .pill {
+  grid-area: pill;
+  justify-self: start;
+}
+
+.introHead > .name {
+  grid-area: name;
+  font-size: clamp(40px, 4.7vw, 60px);
+}
+
+.introPortrait {
+  grid-area: photo;
+}
+
+/* Same petal as the logo (Header.module.css .quad, 2nd petal): one large rounded corner.
+   The padding shows a ring split into the logo's four hues, in the logo's positions. */
 .portrait {
-  width: 56px;
-  height: 56px;
-  border-radius: 18px;
+  --size: 132px;
+  --ring: 5px;
+  --petal: 96px;
+  --corner: 26px;
+  flex-shrink: 0;
+  display: block;
+  width: calc(var(--size) + 2 * var(--ring));
+  height: calc(var(--size) + 2 * var(--ring));
+  padding: var(--ring);
+  border-radius: var(--petal) var(--corner) var(--corner) var(--corner);
+  background: conic-gradient(
+    var(--tangerine) 0 25%,
+    var(--teal) 0 50%,
+    var(--magenta) 0 75%,
+    var(--cobalt) 0
+  );
+  box-shadow: var(--shadow-sm);
+}
+
+.portrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  border-radius: calc(var(--petal) - var(--ring)) calc(var(--corner) - var(--ring))
+    calc(var(--corner) - var(--ring)) calc(var(--corner) - var(--ring));
+  background: var(--surface-2);
+}
+
+.portrait[data-size='sm'] {
+  --size: 64px;
+  --ring: 3px;
+  --petal: 46px;
+  --corner: 14px;
+}
+
+.contactHead {
+  display: flex;
+  align-items: center;
+  gap: 18px;
 }
 
 .name {
@@ -524,8 +581,35 @@
     gap: 14px;
   }
 
-  .name {
+  .name,
+  .introHead > .name {
     font-size: 36px;
+  }
+
+  /* narrow: portrait sits beside the pill, the name gets the full width */
+  .introHead {
+    grid-template-areas:
+      'pill  photo'
+      'name  name';
+    align-items: center;
+    row-gap: 14px;
+  }
+
+  .introPortrait {
+    --size: 76px;
+    --ring: 4px;
+    --petal: 56px;
+    --corner: 16px;
+  }
+
+  .portrait[data-size='sm'] {
+    --size: 52px;
+    --petal: 38px;
+    --corner: 12px;
+  }
+
+  .contactHead {
+    gap: 14px;
   }
 
   .roles {

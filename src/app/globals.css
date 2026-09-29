@@ -1,0 +1,152 @@
+/* ─────────────────────────────────────────────────────────────
+   Prism tokens. Light = default ("Prism"), dark = "Aurora" palette.
+   Every station owns a hue; [data-hue] maps it onto --hue / --hue-tint / --hue-ink / --hue-band.
+   ───────────────────────────────────────────────────────────── */
+
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #fff6ea;
+  --surface: #ffffff;
+  --surface-2: #fff6ea;
+  --ink: #1b1631;
+  --ink-soft: #4a4460;
+  --muted: #6b6480;
+  --line: rgb(27 22 49 / 0.12);
+  --track: rgb(27 22 49 / 0.07);
+  --shadow: 0 30px 80px rgb(27 22 49 / 0.12);
+  --shadow-sm: 0 6px 24px rgb(27 22 49 / 0.08);
+  --year: #2f4bff;
+  --primary: #2f4bff;
+  --on-primary: #ffffff;
+  --contrast: #1b1631;
+  --on-contrast: #ffffff;
+  --ring-alpha: 0.2;
+  --danger: #b42318;
+
+  --cobalt: #2f4bff;
+  --cobalt-tint: #e8ecff;
+  --cobalt-ink: #1f35c9;
+  --cobalt-band: #2f4bff;
+  --tangerine: #ff6a2b;
+  --tangerine-tint: #ffe6da;
+  --tangerine-ink: #b8410f;
+  --tangerine-band: #b8410f;
+  --magenta: #e0287a;
+  --magenta-tint: #fce1ec;
+  --magenta-ink: #a8185a;
+  --magenta-band: #a8185a;
+  --teal: #0f9e8a;
+  --teal-tint: #ddf5f1;
+  --teal-ink: #0b7466;
+  --teal-band: #0b7466;
+  --sun: #ffb81c;
+  --sun-tint: #fff0cc;
+  --sun-ink: #8a5f00;
+  --sun-band: #8a5f00;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0b0a1f;
+  --surface: #16143a;
+  --surface-2: #0f0d2b;
+  --ink: #f4f2ff;
+  --ink-soft: #c9c4f0;
+  --muted: #a9a4d6;
+  --line: rgb(244 242 255 / 0.12);
+  --track: rgb(244 242 255 / 0.08);
+  --shadow: 0 30px 80px rgb(0 0 0 / 0.55);
+  --shadow-sm: 0 6px 24px rgb(0 0 0 / 0.4);
+  --year: #22d3ee;
+  --primary: #6b4eff;
+  --on-primary: #ffffff;
+  --contrast: #f4f2ff;
+  --on-contrast: #0b0a1f;
+  --ring-alpha: 0.38;
+  --danger: #ffa8bb;
+
+  --cobalt: #7c5cff;
+  --cobalt-tint: rgb(124 92 255 / 0.18);
+  --cobalt-ink: #c4b5ff;
+  --cobalt-band: #6b4eff;
+  --tangerine: #ff8a5b;
+  --tangerine-tint: rgb(255 138 91 / 0.16);
+  --tangerine-ink: #ffb896;
+  --tangerine-band: #b8410f;
+  --magenta: #ff6b8b;
+  --magenta-tint: rgb(255 107 139 / 0.16);
+  --magenta-ink: #ffa8bb;
+  --magenta-band: #b0195e;
+  --teal: #22d3ee;
+  --teal-tint: rgb(34 211 238 / 0.14);
+  --teal-ink: #7ce7f7;
+  --teal-band: #0b7466;
+  --sun: #ffc857;
+  --sun-tint: rgb(255 200 87 / 0.14);
+  --sun-ink: #ffd98a;
+  --sun-band: #8a5f00;
+}
+
+[data-hue='cobalt'] { --hue: var(--cobalt); --hue-tint: var(--cobalt-tint); --hue-ink: var(--cobalt-ink); --hue-band: var(--cobalt-band); }
+[data-hue='tangerine'] { --hue: var(--tangerine); --hue-tint: var(--tangerine-tint); --hue-ink: var(--tangerine-ink); --hue-band: var(--tangerine-band); }
+[data-hue='magenta'] { --hue: var(--magenta); --hue-tint: var(--magenta-tint); --hue-ink: var(--magenta-ink); --hue-band: var(--magenta-band); }
+[data-hue='teal'] { --hue: var(--teal); --hue-tint: var(--teal-tint); --hue-ink: var(--teal-ink); --hue-band: var(--teal-band); }
+[data-hue='sun'] { --hue: var(--sun); --hue-tint: var(--sun-tint); --hue-ink: var(--sun-ink); --hue-band: var(--sun-band); }
+[data-hue='ink'] { --hue: var(--ink); --hue-tint: var(--surface-2); --hue-ink: var(--ink); --hue-band: var(--contrast); }
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background 300ms ease, color 300ms ease;
+}
+
+::selection {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 100;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: var(--contrast);
+  color: var(--on-contrast);
+  font-size: 13px;
+  font-weight: 600;
+  transform: translateY(-160%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
